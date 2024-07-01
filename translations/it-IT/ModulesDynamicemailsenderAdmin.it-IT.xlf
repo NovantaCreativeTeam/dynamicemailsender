@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="f1370a0d45afbda84b78d5da7e093aa9">
+        <source>Dynamic Email Sender</source>
+        <target>Mittente email dinamico</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="057252b088dccfacfb273d2b3f7056d5">
+        <source>Can handle email sender based on employee that trigger email</source>
+        <target>Può gestire mittenti differente sulla base del dipendente che scaturisce l'invio della mail</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7b12b6e6a5a70831663090ac4dcf7789">
+        <source>Do you want to uninstall module?</source>
+        <target>Vuoi disinstallare il modulo?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f2ac6c6c85aa1fa9c36988834726b569">
+        <source>Enable as Email Sender</source>
+        <target>Abilita come Mittente</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="cd1af677567d4ea7f527e579e19da849">
+        <source>Email From Name</source>
+        <target>Nome del mittente</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
