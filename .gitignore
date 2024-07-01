@@ -30,3 +30,5 @@ Thumbs.db
 # PS Module config installation file
 config.xml
 config_*.xml
+
+.php-cs-fixer.cache

@@ -22,7 +22,7 @@ class ComposerAutoloaderInit2f0d9dfdefe83591eae3a60b13a5cc70
             return self::$loader;
         }
 
-        spl_autoload_register(array('ComposerAutoloaderInit2f0d9dfdefe83591eae3a60b13a5cc70', 'loadClassLoader'), true, true);
+        spl_autoload_register(array('ComposerAutoloaderInit2f0d9dfdefe83591eae3a60b13a5cc70', 'loadClassLoader'), true, false);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(\dirname(__FILE__)));
         spl_autoload_unregister(array('ComposerAutoloaderInit2f0d9dfdefe83591eae3a60b13a5cc70', 'loadClassLoader'));
 
@@ -48,7 +48,7 @@ class ComposerAutoloaderInit2f0d9dfdefe83591eae3a60b13a5cc70
             }
         }
 
-        $loader->register(true);
+        $loader->register(false);
 
         return $loader;
     }

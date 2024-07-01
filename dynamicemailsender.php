@@ -1,28 +1,22 @@
 <?php
 /**
-* 2007-2022 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Novanta\DynamicEmailSender\Domain\Employee\Query\GetEmployeeEmailSenderInfo;
@@ -58,10 +52,9 @@ class Dynamicemailsender extends Module
 
         $this->confirmUninstall = $this->trans('Do you want to uninstall module?', [], 'Modules.Dynamicemailsender.Admin');
 
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
     }
 
-    
     public function install()
     {
         $configuration = SymfonyContainer::getInstance()->get('prestashop.adapter.legacy.configuration');
@@ -76,7 +69,7 @@ class Dynamicemailsender extends Module
 
     public function uninstall()
     {
-        return parent::uninstall() 
+        return parent::uninstall()
             && $this->uninstallTables();
     }
 
@@ -95,6 +88,7 @@ class Dynamicemailsender extends Module
     private function uninstallTables()
     {
         $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'employee_email_sender`';
+
         return Db::getInstance()->execute($sql);
     }
 
@@ -104,25 +98,26 @@ class Dynamicemailsender extends Module
     }
 
     /**
-     * Hook che modifica il mittente delle email 
-     * sulla base del' employee che effettua l'azione 
+     * Hook che modifica il mittente delle email
+     * sulla base del' employee che effettua l'azione
      *
      * @param array $params
+     *
      * @return void
      */
     public function hookActionEmailSendBefore($params)
     {
         global $cookie;
         $container = SymfonyContainer::getInstance();
-        
-        if($cookie && $cookie->id_employee) {
+
+        if ($cookie && $cookie->id_employee) {
             $request = new GetEmployeeEmailSenderInfo($cookie->id_employee);
             $employee = $container->get('prestashop.core.query_bus')->handle($request);
 
-            if($employee && $employee['enabled_as_email_sender']) {
+            if ($employee && $employee['enabled_as_email_sender']) {
                 $params['from'] = $employee['email'];
-                $params['fromName'] = 
-                    $employee['email_sender_name'] ? 
+                $params['fromName'] =
+                    $employee['email_sender_name'] ?
                     $employee['email_sender_name'] :
                         ($employee['name'] + ' ' + $employee['lastname'] + ' | ' + $container->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_NAME'));
             }
@@ -133,33 +128,34 @@ class Dynamicemailsender extends Module
      * Funzione per modificare la form del' Employee
      *
      * @param array $hookParams
+     *
      * @return void
      */
     public function hookActionEmployeeFormBuilderModifier(&$hookParams)
     {
         $formBuilder = $hookParams['form_builder'];
         $formBuilder
-            ->add('enabled_as_email_sender', SwitchType::class,  [ 
+            ->add('enabled_as_email_sender', SwitchType::class, [
                 'label' => $this->trans('Enable as Email Sender', [], 'Modules.Dynamicemailsender.Admin'),
-                'empty_data' => 1
-                ]
+                'empty_data' => 1,
+            ]
             )
             ->add('email_sender_name', TextType::class, [
-                    'label' => $this->trans('Email From Name', [], 'Modules.Dynamicemailsender.Admin'),
-                    'attr' => [
-                        'placeholder' => 'ex. John Doe | Prestashop'
-                    ],
-                    'required' => false
-                ]
+                'label' => $this->trans('Email From Name', [], 'Modules.Dynamicemailsender.Admin'),
+                'attr' => [
+                    'placeholder' => 'ex. John Doe | Prestashop',
+                ],
+                'required' => false,
+            ]
             );
 
         // ToDo chiamata CQRS per recuperare le informazioni del dipendente
         // così che poi posso riempire la form di modiifca, se creazioni non faccio nulla
-        if(array_key_exists('id', $hookParams) && $hookParams['id']) {
+        if (array_key_exists('id', $hookParams) && $hookParams['id']) {
             $request = new GetEmployeeEmailSenderInfo($hookParams['id']);
             $employee = SymfonyContainer::getInstance()->get('prestashop.core.query_bus')->handle($request);
 
-            if($employee) {
+            if ($employee) {
                 $hookParams['data']['enabled_as_email_sender'] = $employee['enabled_as_email_sender'];
                 $hookParams['data']['email_sender_name'] = $employee['email_sender_name'];
                 $formBuilder->setData($hookParams['data']);
@@ -171,14 +167,15 @@ class Dynamicemailsender extends Module
      * Funzione che salva le informazioni extra dell'Emplyee in fase di modifica
      *
      * @param array $params
+     *
      * @return void
      */
-    public function hookActionAfterUpdateEmployeeFormHandler($params) 
+    public function hookActionAfterUpdateEmployeeFormHandler($params)
     {
         // Salva le informazioni aggiuntive dell'employee
-        if(array_key_exists('id', $params) && $params['id']) {
+        if (array_key_exists('id', $params) && $params['id']) {
             $container = SymfonyContainer::getInstance();
-            
+
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = $container->get('database_connection')->createQueryBuilder();
             $queryBuilder
@@ -189,7 +186,7 @@ class Dynamicemailsender extends Module
             $queryBuilder->setParameter('idEmployee', $params['id']);
             $exists_email_sender_info = (bool) $queryBuilder->execute()->fetchColumn();
 
-            if(!$exists_email_sender_info) {
+            if (!$exists_email_sender_info) {
                 $queryBuilder
                     ->insert(_DB_PREFIX_ . 'employee_email_sender')
                     ->values([
@@ -199,9 +196,9 @@ class Dynamicemailsender extends Module
                     ])
                     ->setParameters([
                         ':enabled' => $params['form_data']['enabled_as_email_sender'],
-                        ':name' => $params['form_data']['email_sender_name']
+                        ':name' => $params['form_data']['email_sender_name'],
                     ]);
-                
+
                 $queryBuilder->execute();
             } else {
                 $queryBuilder
@@ -222,13 +219,14 @@ class Dynamicemailsender extends Module
      * Funzione che salva le informazioni extra dell'Employee in fase di creazione
      *
      * @param array $params
+     *
      * @return void
      */
     public function hookActionAfterCreateEmployeeFormHandler($params)
     {
-        if(array_key_exists('id', $params) && $params['id']) {
+        if (array_key_exists('id', $params) && $params['id']) {
             $container = SymfonyContainer::getInstance();
-            
+
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = $container->get('database_connection')->createQueryBuilder();
             $queryBuilder
@@ -240,9 +238,9 @@ class Dynamicemailsender extends Module
                 ])
                 ->setParameters([
                     ':enabled' => $params['form_data']['enabled_as_email_sender'],
-                    ':name' => $params['form_data']['email_sender_name']
+                    ':name' => $params['form_data']['email_sender_name'],
                 ]);
-            
+
             $queryBuilder->execute();
         }
     }

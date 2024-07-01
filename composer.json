@@ -3,5 +3,16 @@
         "psr-4": {
             "Novanta\\DynamicEmailSender\\": "src/"
         }
-    }
+    },
+    "config": {
+        "prepend-autoloader": false
+    },
+    "require-dev": {
+        "prestashop/php-dev-tools": "^5.0",
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "prestashop/header-stamp": "^2.3",
+        "prestashop/autoindex": "^2.1"
+    },
+    "author": "PrestaShop",
+    "license": "AFL-3.0"
 }
