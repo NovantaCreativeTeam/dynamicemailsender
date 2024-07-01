@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  novanta.dynamicemailsender.domain.employee.query_handler.get_employee_email_sender_info:
+    class: 'Novanta\DynamicEmailSender\Domain\Employee\QueryHandler\GetEmployeeEmailSenderInfoHandler'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+    tags:
+      - name: tactician.handler
+        command: Novanta\DynamicEmailSender\Domain\Employee\Query\GetEmployeeEmailSenderInfo
